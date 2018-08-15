@@ -10,6 +10,8 @@ And we'll also focus on the simplest possible method of executing Bash scripts a
 
 The first time that you [launch the Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/overview) you'll be asked to configure a few things.
 
+<details><summary>Details</summary>
+
 - First, you'll choose the shell environment that you wish to use. We'll use **Bash** for the examples in this repo.
 
   ![Example Shell Selection Prompt](/images/cloudshell-001-welcome-set-shell.png)
@@ -27,3 +29,5 @@ The first time that you [launch the Azure Cloud Shell](https://docs.microsoft.co
   - The main recommendation is to set the default output format to `[3] table - Human-readable`. Here's an example:
 
     ![Example az configure command](/images/cloudshell-004-config.png)
+
+</details>
