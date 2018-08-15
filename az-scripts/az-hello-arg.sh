@@ -4,7 +4,7 @@
 # the following line (beginning with curl...) at the command prompt (uses shortened URL to this script as committed in GitHub repo)
 # and then replacing the arg <YourFirstNameArg> with your First Name:
 #
-#   curl https://git.io/slathrop-az-hello-arg | bash -sL <YourFirstNameArg>
+#   curl -sL https://git.io/slathrop-az-hello-arg | bash -s <YourFirstNameArg>
 #
 
 echo Hello $1!
