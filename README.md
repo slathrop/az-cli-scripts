@@ -31,3 +31,7 @@ The first time that you [launch the Azure Cloud Shell](https://docs.microsoft.co
     ![Example az configure command](/images/cloudshell-004-config.png)
 
 </details>
+
+## Reference Materials
+
+[Here](https://docs.microsoft.com/en-us/azure/cloud-shell/troubleshooting) is a very helpful article with details on making the most of Azure CLI and Cloud Shell.
