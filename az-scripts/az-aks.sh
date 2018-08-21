@@ -23,6 +23,7 @@
 
 echo "az-aks.sh v1.0.0-alpha.1"
 echo ""
+echo ""
 echo "This script will create (in East US):"
 echo ""
 echo "  - A resource group \"${1}-${2}-res-grp\""
@@ -38,9 +39,9 @@ echo "  will be displayed with a note asking you to email it to your engineer"
 echo "  so that it may be used to administer the new cluster."
 echo ""
 echo "  Total Execution Time: ~20 minutes. Press CTRL+C now to exit, or"
-
 read -es -p "Press ENTER to continue." TRAP_ENTER_KEY
 
+echo ""
 echo  - Running ..
 
 # Create resource group
