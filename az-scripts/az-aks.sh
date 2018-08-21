@@ -20,7 +20,7 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
-echo "az-aks.sh - rev. 5"
+echo "az-aks.sh - rev. 6"
 echo ""
 echo ""
 echo "This script will create (in East US):"
@@ -32,13 +32,13 @@ echo "  - A role assignment granting the new service principal access to the con
 echo "  - A single-node (Standard_B2s) Kubernetes Service (AKS) cluster \"${1}-${2}-cluster\" running as the new service principal"
 echo ""
 echo "  Output from Azure commands is piped (appended) into a file named \"${1}-${2}-output.log\""
-echo "  for later review: tail --lines=30 ${1}-${2}-output.log"
+echo "  for later review: tail --lines=85 ${1}-${2}-output.log"
 echo ""
 echo "* ACTION ITEM: At the end, the ID of the new AD service principal"
 echo "  will be displayed with a note asking you to email it to your engineer"
 echo "  so that it may be used to administer the new cluster."
 echo ""
-echo "  Total Execution Time: ~20 minutes. Press CTRL+C now if you wish to exit."
+echo "  Total Execution Time: ~20 minutes. Press CTRL+C now if you wish to exit cleanly."
 
 echo ""
 read -es -p "Press ENTER to continue." TRAP_ENTER_KEY < /dev/tty
