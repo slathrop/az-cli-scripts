@@ -11,6 +11,6 @@
 #   curl -sL https://git.io/slathrop-az-aks | bash -s <namingPrefix> <suiteName> <cspPwd>
 #
 
-echo Hello $1 $2 $3!
+echo Hello ${1} ${2} ${3}!
 echo Your Azure Subscriptions are as follows...
 az account list
