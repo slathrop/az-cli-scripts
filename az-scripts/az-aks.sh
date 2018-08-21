@@ -23,39 +23,45 @@
 
 echo ""
 echo "This script will create (in East US):"
-echo "  A resource group \"${1}-${2}-res-grp\""
-echo "  A container registry \"${1}${2}containers\""
-echo "  An Azure AD service principal \"${1}-${2}-adsp\""
-echo "  A role assignment granting the service principal access to the container registry"
-echo "  A Kubernetes Service cluster \"${1}-${2}-cluster\""
+echo ""
+echo "  - A resource group \"${1}-${2}-res-grp\""
+echo "  - A container registry \"${1}${2}containers\""
+echo "  - An Azure AD service principal \"${1}-${2}-adsp\""
+echo "  - A role assignment granting the service principal access to the container registry"
+echo "  - A Kubernetes Service cluster \"${1}-${2}-cluster\""
+echo ""
+echo "  Output is piped (appended) into a file named \"${1}-${2}-output.log\""
 echo ""
 echo "* ACTION ITEM: At the end, the ID of the new AD service principal"
 echo "  will be displayed with a note asking you to email it to your engineer"
 echo "  so that it may be used to administer the new cluster."
 echo ""
-read -p "Press ENTER to continue or CTRL+C to exit."
+read -p "Press ENTER to continue (Execution Time: ~20 minutes) or CTRL+C to exit." TRAP_ENTER_KEY
+
+echo ""
+echo " - Running .."
 
 # Create resource group
-az group create --location eastus --name ${1}-${2}-res-grp
+az group create --location eastus --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
 
 # Create container registry (acr)
-az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true
+az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
 
 # Get acr id
 export ACR_ID=$(az acr show --name ${1}${2}containers --query "id" --output tsv)
 
 # Create AD service principal (adsp)
 # For a more restrictive account, consider adding: --skip-assignment
-az ad sp create-for-rbac -n "${1}-${2}-adsp" -p "${3}"
+az ad sp create-for-rbac -n "${1}-${2}-adsp" -p "${3}" >> ${1}-${2}-output.log
 
 # Get adsp appId
 export SP_APP_ID=$(az ad sp show --id "http://${1}-${2}-adsp" --query "appId" --output tsv)
 
 # Grant adsp access to acr
-az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID
+az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID >> ${1}-${2}-output.log
 
 # Create aks cluster
-az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3
+az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3 >> ${1}-${2}-output.log
 
 # Echo instructions on adsp appId
 echo ""
