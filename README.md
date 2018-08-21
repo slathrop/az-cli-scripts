@@ -35,3 +35,63 @@ The first time that you [launch the Azure Cloud Shell](https://docs.microsoft.co
 ## Reference Materials
 
 [Here](https://docs.microsoft.com/en-us/azure/cloud-shell/troubleshooting) is a very helpful article with details on making the most of Azure CLI and Cloud Shell.
+
+## Scripting Ideas, Working With Others
+
+You'll often want to write Azure CLI scripts that can be executed easily within either your _own_ Azure account or within the accounts of others (clients, partners, etc.).
+
+If you're working with others, first have them:
+
+- Login to their account on https://portal.azure.com and then
+
+- Click on the `>_` icon in the upper-right
+
+- If necessary for first-time setup, go through the steps listed above under [Initial Setup](https://github.com/slathrop/az-cli-scripts#initial-setup)
+
+- Finally, make sure that they have the Azure Cloud Shell open with the Bash environment selected (not PowerShell: see left side of Cloud Shell toolbar) and have them confirm their subscription:
+
+  - `az account list`, and then if necessary, to set default subscription:
+
+    ```bash
+    az account set -s aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+    ```
+
+So with those preliminaries out of the way, you want to be able to essentially **copy-and-paste pre-scripted commands** into _Azure Cloud Shell_. How?
+
+### Practical Copy-and-Paste
+
+> Note that on Windows, **pasting** into Azure Cloud Shell uses a non-standard key sequence: `SHIFT+INSERT`. Other OSs can use the standard `CTRL+V`.
+
+> If you have multiple commands for pasting, you'll find that embedded line feeds or carriage returns in your to-be-pasted text can be a problem. Solution below.
+
+So a great way to do this **copy-and-paste thing** is to:
+
+- Place all of your commands in a **Bash script** and
+
+- Host your script somewhere on the Internet
+
+- Use the `curl` command to pull down the script and stream it into the Bash command interpreter in the Azure Cloud Shell:
+
+  ```bash
+  # Run a script (without any command-line arguments) in Azure Cloud Shell
+  bash <(curl -sL https://SOME-SCRIPT-LOCATION)
+  ```
+
+- You can make your script generic and remove customer details from it by accepting command-line arguments like this:
+
+  ```bash
+  # The bash "-s" option is necessary to tell bash to look at the piped stream from curl
+  curl -sL https://SOME-SCRIPT-LOCATION | bash -s <YourCustomerDetails>
+  ```
+
+You can even cleanup a long URL for your script location (`https://SOME-SCRIPT-LOCATION`) by using a shortener service. For example, if your script is in GitHub a common shortening option is `git.io`, which you would use by running something like this:
+
+```bash
+curl -i https://git.io -F "url=https://SOME-SCRIPT-LOCATION" -F "code=your-short-path"
+```
+
+Which results in the ability to paste a command like this into the Azure Cloud Shell:
+
+```bash
+bash <(curl -sL https://git.io/your-short-path)
+```
