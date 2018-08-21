@@ -10,6 +10,10 @@
 #
 #   curl -sL https://git.io/slathrop-az-aks | bash -s <namingPrefix> <suiteName> <cspPwd>
 #
+#   For example:
+#
+#   curl -sL https://git.io/slathrop-az-aks | bash -s "prod" "o365" "eeeeeeee-ffff-aaaa-bbbb-cccccccccccc"
+#
 # If necessary, cleanup and start from scratch with:
 #
 #   az group delete --name <namingPrefix>-<suiteName>-res-grp --yes
