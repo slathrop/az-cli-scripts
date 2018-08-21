@@ -21,6 +21,7 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
+echo "az-aks.sh v1.0.0-alpha.1"
 echo ""
 echo "This script will create (in East US):"
 echo ""
