@@ -9,4 +9,4 @@
 
 echo Hello $1!
 echo Your Azure Subscriptions are as follows...
-az account list
+az account list --output table
