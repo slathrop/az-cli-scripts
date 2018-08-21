@@ -21,7 +21,7 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
-echo "az-aks.sh v1.0.0-alpha.3"
+echo "az-aks.sh - rev. 4"
 echo ""
 echo ""
 echo "This script will create (in East US):"
@@ -38,8 +38,9 @@ echo "* ACTION ITEM: At the end, the ID of the new AD service principal"
 echo "  will be displayed with a note asking you to email it to your engineer"
 echo "  so that it may be used to administer the new cluster."
 echo ""
-echo "  Total Execution Time: ~20 minutes. Press CTRL+C now to exit, or"
+echo "  Total Execution Time: ~20 minutes. Press CTRL+C now if you wish to exit."
 
+echo ""
 read -es -p "Press ENTER to continue." TRAP_ENTER_KEY < /dev/tty
 
 echo ""
