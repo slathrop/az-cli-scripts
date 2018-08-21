@@ -21,7 +21,7 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
-echo "az-aks.sh v1.0.0-alpha.1"
+echo "az-aks.sh v1.0.0-alpha.2"
 echo ""
 echo ""
 echo "This script will create (in East US):"
@@ -39,9 +39,9 @@ echo "  will be displayed with a note asking you to email it to your engineer"
 echo "  so that it may be used to administer the new cluster."
 echo ""
 echo "  Total Execution Time: ~20 minutes. Press CTRL+C now to exit, or"
+
 read -es -p "Press ENTER to continue." TRAP_ENTER_KEY
 
-echo ""
 echo  - Running ..
 
 # Create resource group
@@ -70,5 +70,5 @@ echo  - Running ..
 echo ""
 echo ""
 echo "Script Execution Completed!"
-echo "*ACTION ITEM: Send this service principal ID in an email to your engineer: ${SP_APP_ID}"
+echo "* ACTION ITEM: Send this service principal ID in an email to your engineer: ${SP_APP_ID}"
 echo ""
