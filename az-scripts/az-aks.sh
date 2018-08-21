@@ -36,10 +36,11 @@ echo "* ACTION ITEM: At the end, the ID of the new AD service principal"
 echo "  will be displayed with a note asking you to email it to your engineer"
 echo "  so that it may be used to administer the new cluster."
 echo ""
-read -p "Press ENTER to continue (Execution Time: ~20 minutes) or CTRL+C to exit." TRAP_ENTER_KEY
+echo "  Total Execution Time: ~20 minutes. Press CTRL+C now to exit, or"
 
-echo ""
-echo " - Running .."
+read -es -p "Press ENTER to continue." TRAP_ENTER_KEY
+
+echo  - Running ..
 
 # Create resource group
 az group create --location eastus --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
