@@ -21,7 +21,7 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
-echo "az-aks.sh v1.0.0-alpha.2"
+echo "az-aks.sh v1.0.0-alpha.3"
 echo ""
 echo ""
 echo "This script will create (in East US):"
@@ -40,9 +40,10 @@ echo "  so that it may be used to administer the new cluster."
 echo ""
 echo "  Total Execution Time: ~20 minutes. Press CTRL+C now to exit, or"
 
-read -es -p "Press ENTER to continue." TRAP_ENTER_KEY
+read -es -p "Press ENTER to continue." TRAP_ENTER_KEY < /dev/tty
 
-echo  - Running ..
+echo ""
+echo " - Running .."
 
 # Create resource group
 # az group create --location eastus --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
