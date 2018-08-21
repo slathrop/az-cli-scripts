@@ -43,26 +43,26 @@ read -es -p "Press ENTER to continue." TRAP_ENTER_KEY
 echo  - Running ..
 
 # Create resource group
-az group create --location eastus --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
+# az group create --location eastus --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
 
-# Create container registry (acr)
-az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
+# # Create container registry (acr)
+# az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
 
-# Get acr id
-export ACR_ID=$(az acr show --name ${1}${2}containers --query "id" --output tsv)
+# # Get acr id
+# export ACR_ID=$(az acr show --name ${1}${2}containers --query "id" --output tsv)
 
-# Create AD service principal (adsp)
-# For a more restrictive account, consider adding: --skip-assignment
-az ad sp create-for-rbac -n "${1}-${2}-adsp" -p "${3}" >> ${1}-${2}-output.log
+# # Create AD service principal (adsp)
+# # For a more restrictive account, consider adding: --skip-assignment
+# az ad sp create-for-rbac -n "${1}-${2}-adsp" -p "${3}" >> ${1}-${2}-output.log
 
-# Get adsp appId
-export SP_APP_ID=$(az ad sp show --id "http://${1}-${2}-adsp" --query "appId" --output tsv)
+# # Get adsp appId
+# export SP_APP_ID=$(az ad sp show --id "http://${1}-${2}-adsp" --query "appId" --output tsv)
 
-# Grant adsp access to acr
-az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID >> ${1}-${2}-output.log
+# # Grant adsp access to acr
+# az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID >> ${1}-${2}-output.log
 
-# Create aks cluster
-az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3 >> ${1}-${2}-output.log
+# # Create aks cluster
+# az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3 >> ${1}-${2}-output.log
 
 # Echo instructions on adsp appId
 echo ""
