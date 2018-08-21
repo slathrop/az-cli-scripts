@@ -46,7 +46,7 @@ If you're working with others, first have them:
 
 - Click on the `>_` icon in the upper-right
 
-- If necessary for first-time setup, go through the steps listed above under [Initial Setup](https://github.com/slathrop/az-cli-scripts#initial-setup)
+- If necessary for first-time setup, go through the steps listed above under [Initial Setup](#initial-setup)
 
 - Finally, make sure that they have the Azure Cloud Shell open with the Bash environment selected (not PowerShell: see left side of Cloud Shell toolbar) and have them confirm their subscription:
 
