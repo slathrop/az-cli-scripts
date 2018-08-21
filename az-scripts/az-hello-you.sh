@@ -6,8 +6,8 @@
 #   bash <(curl -sL https://git.io/slathrop-az-hello-you)
 #
 
-read -p "Enter your first name: " fname
+read -p "Enter your first name: " FNAME
 
-echo Hello $fname!
+echo Hello $FNAME!
 echo Your Azure Subscriptions are as follows...
 az account list
