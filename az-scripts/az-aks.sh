@@ -3,11 +3,12 @@
 # Execute this directly in Azure Cloud Shell (https://shell.azure.com) by pasting (SHIFT+INS on Windows, CTRL+V on Mac or Linux)
 # the following line (beginning with curl...) at the command prompt and then replacing the args:
 #
-#   curl -sL https://git.io/slathrop-az-aks | bash -s <namingPrefix> <suiteName> <adspPwd>
+#   curl -sL https://git.io/slathrop-az-aks | bash -s <namingPrefix> <suiteName> <adspPwd> [<location>]
 #
-#     ${1}  <namingPrefix>      Prefix for all names (e.g., "prod")
-#     ${2}  <suiteName>         Name/abbrev. of suite of services (e.g., "o365")
-#     ${3}  <adspPwd>           AD Service Principal (for cluster) Password (recommend a GUID)
+#     [Required]  ${1}  <namingPrefix>      Prefix for all names (e.g., "prod")
+#     [Required]  ${2}  <suiteName>         Name/abbrev. of suite of services (e.g., "o365")
+#     [Required]  ${3}  <adspPwd>           AD Service Principal (for cluster) Password (recommend a GUID)
+#     [Optional]  ${4}  <location>          Azure location. Defaults to "eastus"
 #
 #   For example:
 #
@@ -20,10 +21,15 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
-echo "az-aks.sh - rev. 6"
+# If not supplied, ${4} defaults to "eastus"
+if [ -z "$4" ]; then
+   set -- "$1" "$2" "$3" "eastus"
+fi
+
+echo "az-aks.sh - rev. 7"
 echo ""
 echo ""
-echo "This script will create (in East US):"
+echo "This script will create (in \"${4}\"):"
 echo ""
 echo "  - A resource group \"${1}-${2}-res-grp\""
 echo "  - A container registry \"${1}${2}containers\" using the \"Standard\" SKU"
@@ -47,7 +53,7 @@ echo ""
 echo " - Running .."
 
 # Create resource group
-az group create --location eastus --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
+az group create --location ${4} --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
 
 # Create container registry (acr)
 az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
