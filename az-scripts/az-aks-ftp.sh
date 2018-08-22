@@ -1,18 +1,22 @@
 #!/bin/bash
 #
+# NOTE: This script is similar to az-aks.sh, but it adds FTPS of results to your Azure Websites deployment FTP host
+#
 # Execute this directly in Azure Cloud Shell (https://shell.azure.com) by pasting (SHIFT+INS on Windows, CTRL+V on Mac or Linux)
 # the following line (beginning with curl...) at the command prompt and then replacing the args:
 #
-#   curl -sL https://git.io/slathrop-az-aks | bash -s <namingPrefix> <suiteName> <adspPwd> [<location>]
+#   curl -sL https://git.io/slathrop-az-aks-ftp | bash -s <namingPrefix> <suiteName> <adspPwd> <azureFTPSubDomain> <ftpCreds> [<location>]
 #
-#     [Required]  ${1}  <namingPrefix>      Prefix for all names (e.g., "prod")
-#     [Required]  ${2}  <suiteName>         Name/abbrev. of suite of services (e.g., "o365")
-#     [Required]  ${3}  <adspPwd>           AD Service Principal (for cluster) Password (recommend a GUID)
-#     [Optional]  ${4}  <location>          Azure location. Defaults to "eastus"
+#     [Required]  ${1}  <namingPrefix>        Prefix for all names (e.g., "prod")
+#     [Required]  ${2}  <suiteName>           Name/abbrev. of suite of services (e.g., "o365")
+#     [Required]  ${3}  <adspPwd>             AD Service Principal (for cluster) Password (recommend a GUID)
+#     [Required]  ${4}  <azureFTPSubDomain>   Just the sub-domain portion of an FTP site of the form: "<sub-domain>.ftp.azurewebsites.windows.net"
+#     [Required]  ${5}  <ftpCreds>            FTP credentials of the form: "username:password"
+#     [Optional]  ${6}  <location>            Azure location. Defaults to "eastus"
 #
 #   For example:
 #
-#   curl -sL https://git.io/slathrop-az-aks | bash -s "prod" "o365" "eeeeeeee-ffff-aaaa-bbbb-cccccccccccc"
+#   curl -sL https://git.io/slathrop-az-aks-ftp | bash -s "prod" "o365" "eeeeeeee-ffff-aaaa-bbbb-cccccccccccc" "waws-prod-zzz-111" "resgrp\ftp-user:SomePassw0rd!"
 #
 # If necessary, cleanup and start from scratch with:
 #
@@ -21,14 +25,14 @@
 #   az ad sp delete --id "http://<namingPrefix>-<suiteName>-adsp"
 #
 
-# If not supplied, ${4} defaults to "eastus"
+# If not supplied, ${6} defaults to "eastus"
 if [ -z "$4" ]; then
    set -- "$1" "$2" "$3" "eastus"
 fi
 
-echo "az-aks.sh - rev. 8"
+echo "az-aks-ftp.sh - rev. 1"
 echo ""
-echo "This script will create (in \"${4}\"):"
+echo "This script will create (in \"${6}\"):"
 echo ""
 echo "  - A resource group \"${1}-${2}-res-grp\""
 echo "  - A container registry \"${1}${2}containers\" using the \"Standard\" SKU"
@@ -39,9 +43,9 @@ echo ""
 echo "  Output from Azure commands is piped (appended) into a file named \"${1}-${2}-output.log\""
 echo "  for later review: tail --lines=100 ${1}-${2}-output.log"
 echo ""
-echo "* ACTION ITEM: At the end, the ID of the new AD service principal and other details"
-echo "  will be displayed with a note asking you to email them to your engineer"
-echo "  so that they may be used to administer the new cluster."
+echo "* NOTE: Final results including credentials and IDs will be sent automatically via FTPS"
+echo "  to a dropbox specified by the engineer that asked you to execute this command"
+echo "  so that they may administer the new cluster."
 echo ""
 echo "  Total Execution Time: ~20 minutes. Press CTRL+C now if you wish to exit cleanly."
 
@@ -52,7 +56,7 @@ echo ""
 echo " - Running .."
 
 # Create resource group
-az group create --location ${4} --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
+az group create --location ${6} --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
 
 # Create container registry (acr)
 az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
@@ -74,14 +78,17 @@ az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID
 # Create aks cluster
 az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3 >> ${1}-${2}-output.log
 
-# Echo instructions on adsp appId
+# Write kube config file to ./.kube/config
+az aks get-credentials --resource-group ${1}-${2}-res-grp --name ${1}-${2}-cluster >> ${1}-${2}-output.log
+
+# FTPS kube config and output files to location provided by engineer in command args
+curl --upload-file .kube/config ftps://${4}.ftp.azurewebsites.windows.net --user "${5}" >> ${1}-${2}-output.log
+curl --upload-file ${1}-${2}-output.log ftps://${4}.ftp.azurewebsites.windows.net --user "${5}" > /dev/null
+
+# Echo final message
 echo ""
 echo ""
 echo "Script Execution Completed!"
 echo ""
-echo "* ACTION ITEM: Please send this information in an email to your engineer:"
-echo ""
-echo "    Service Principal ID: ${SP_APP_ID}"
-echo "    Container Registry Server: ${ACR_URI}"
-echo "    > docker login ${ACR_URI} -u ${SP_APP_ID} -p <adspPwd>"
+echo "* Results have been sent via FTPS to your engineer."
 echo ""
