@@ -30,7 +30,7 @@ if [ -z "$6" ]; then
    set -- "$1" "$2" "$3" "$4" "$5" "eastus"
 fi
 
-echo "az-aks-ftp.sh - rev. 1"
+echo "az-aks-ftp.sh - rev. 2"
 echo ""
 echo "This script will create (in \"${6}\"):"
 echo ""
