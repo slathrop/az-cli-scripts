@@ -84,8 +84,8 @@ az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID
 # az aks get-credentials --resource-group ${1}-${2}-res-grp --name ${1}-${2}-cluster >> ${1}-${2}-output.log
 
 # FTPS kube config and output files to location provided by engineer in command args
-curl --upload-file .kube/config ftps://${4}.ftp.azurewebsites.windows.net/kube-config-${1}-${2}-cluster --user "${5}" >> ${1}-${2}-output.log
-curl --upload-file ${1}-${2}-output.log ftps://${4}.ftp.azurewebsites.windows.net --user "${5}" > /dev/null
+curl -s --upload-file .kube/config ftps://${4}.ftp.azurewebsites.windows.net/kube-config-${1}-${2}-cluster --user "${5}"
+curl -s --upload-file ${1}-${2}-output.log ftps://${4}.ftp.azurewebsites.windows.net --user "${5}"
 
 # Echo final message
 echo ""
