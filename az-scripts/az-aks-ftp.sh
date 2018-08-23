@@ -78,10 +78,10 @@ export SP_APP_ID=$(az ad sp show --id "http://${1}-${2}-adsp" --query "appId" --
 az role assignment create --assignee "${SP_APP_ID}" --role Owner --scope $ACR_ID >> ${1}-${2}-output.log
 
 # Create aks cluster
-az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3 >> ${1}-${2}-output.log
+# az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node-count 1 --generate-ssh-keys --service-principal "${SP_APP_ID}" --client-secret "${3}" --node-vm-size Standard_B2s --enable-addons http_application_routing --kubernetes-version 1.10.3 >> ${1}-${2}-output.log
 
-# Write kube config file to ./.kube/config
-az aks get-credentials --resource-group ${1}-${2}-res-grp --name ${1}-${2}-cluster >> ${1}-${2}-output.log
+# # Write kube config file to ./.kube/config
+# az aks get-credentials --resource-group ${1}-${2}-res-grp --name ${1}-${2}-cluster >> ${1}-${2}-output.log
 
 # FTPS kube config and output files to location provided by engineer in command args
 curl --upload-file .kube/config ftps://${4}.ftp.azurewebsites.windows.net/kube-config-${1}-${2}-cluster --user "${5}" >> ${1}-${2}-output.log
