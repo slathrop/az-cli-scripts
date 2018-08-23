@@ -26,8 +26,8 @@
 #
 
 # If not supplied, ${6} defaults to "eastus"
-if [ -z "$4" ]; then
-   set -- "$1" "$2" "$3" "eastus"
+if [ -z "$6" ]; then
+   set -- "$1" "$2" "$3" "$4" "$5" "eastus"
 fi
 
 echo "az-aks-ftp.sh - rev. 1"
@@ -61,9 +61,11 @@ az group create --location ${6} --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
 # Create container registry (acr)
 az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
 
-# Get acr id and loginServer URI
+# Get acr id
 export ACR_ID=$(az acr show --name ${1}${2}containers --query "id" --output tsv)
-export ACR_URI=$(az acr show --name ${1}${2}containers --query "loginServer" --output tsv)
+
+# Get acr loginServer URI... uncomment if you wish to use this for something
+# export ACR_URI=$(az acr show --name ${1}${2}containers --query "loginServer" --output tsv)
 
 # Create AD service principal (adsp)
 # For a more restrictive account, consider adding: --skip-assignment
@@ -82,7 +84,7 @@ az aks create --name ${1}-${2}-cluster --resource-group ${1}-${2}-res-grp --node
 az aks get-credentials --resource-group ${1}-${2}-res-grp --name ${1}-${2}-cluster >> ${1}-${2}-output.log
 
 # FTPS kube config and output files to location provided by engineer in command args
-curl --upload-file .kube/config ftps://${4}.ftp.azurewebsites.windows.net --user "${5}" >> ${1}-${2}-output.log
+curl --upload-file .kube/config ftps://${4}.ftp.azurewebsites.windows.net/kube-config-${1}-${2}-cluster --user "${5}" >> ${1}-${2}-output.log
 curl --upload-file ${1}-${2}-output.log ftps://${4}.ftp.azurewebsites.windows.net --user "${5}" > /dev/null
 
 # Echo final message
