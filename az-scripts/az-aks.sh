@@ -26,12 +26,12 @@ if [ -z "$4" ]; then
    set -- "$1" "$2" "$3" "eastus"
 fi
 
-echo "az-aks.sh - rev. 8"
+echo "az-aks.sh - rev. 9"
 echo ""
 echo "This script will create (in \"${4}\"):"
 echo ""
 echo "  - A resource group \"${1}-${2}-res-grp\""
-echo "  - A container registry \"${1}${2}containers\" using the \"Standard\" SKU"
+echo "  - A container registry \"${1}${2}containers\" using the \"Basic\" SKU"
 echo "  - An Azure AD service principal \"${1}-${2}-adsp\""
 echo "  - A role assignment granting the new service principal access to the container registry"
 echo "  - A single-node (Standard_B2s) Kubernetes Service (AKS) cluster \"${1}-${2}-cluster\" running as the new service principal"
@@ -55,7 +55,7 @@ echo " - Running .."
 az group create --location ${4} --name ${1}-${2}-res-grp >> ${1}-${2}-output.log
 
 # Create container registry (acr)
-az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Standard --admin-enabled true >> ${1}-${2}-output.log
+az acr create --name ${1}${2}containers --resource-group ${1}-${2}-res-grp --sku Basic --admin-enabled true >> ${1}-${2}-output.log
 
 # Get acr id and loginServer URI
 export ACR_ID=$(az acr show --name ${1}${2}containers --query "id" --output tsv)
